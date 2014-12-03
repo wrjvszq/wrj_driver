@@ -15,7 +15,6 @@
 #include<mach/gpio.h>
 #include<asm/uaccess.h>
 #include<linux/sched.h>
-#include<linux/input.h>
 
 MODULE_LICENSE("GPL");
 
@@ -23,7 +22,6 @@ struct work_struct work1;
 struct timer_list key_timer;
 unsigned int key_value = 0;
 wait_queue_head_t key_q;
-struct input_dev *button_dev = NULL;
 
 void work1_func(struct work_struct *work)
 {
@@ -35,17 +33,14 @@ void key_timer_func(void)
     if(!(gpio_get_value(S5PV210_GPH2(0))))
     {
         key_value = 1;
-        input_report_key(button_dev,KEY_1,1);
-
     }
     
     if(!(gpio_get_value(S5PV210_GPH3(3))))
     {
         key_value = 8;
-        input_report_key(button_dev,KEY_8,1);
     }
 
-    input_sync(button_dev);
+    wake_up(&key_q);
 }
 
 irqreturn_t key_irq(int irq, void * key_id)
@@ -59,17 +54,45 @@ irqreturn_t key_irq(int irq, void * key_id)
     schedule_work(&work1);
 }
 
+int key_open(struct inode * inode,struct file *file)
+{
+    return 0;
+}
+
+ssize_t key_read(struct file *filp, char __user *buf, size_t size, loff_t *pos)
+{
+    wait_event(key_q,key_value);
+
+    printk("<0> kerenl        %d      \n",key_value);
+    copy_to_user(buf,&key_value,4);
+
+    key_value = 0;
+
+    return 4;
+}
+
+static const struct file_operations key_fops =
+{
+    .open = key_open,
+    .read = key_read,
+};
+
+static struct miscdevice key_dev =
+{
+    .minor = 233,
+    .name = "key",
+    .fops = &key_fops,
+};
 
 static int my_key_init(void)
 {
-    button_dev = input_allocate_device();
-    set_bit(EV_KEY,button_dev->evbit);
-
-    set_bit(KEY_1,button_dev->keybit);
-    set_bit(KEY_8,button_dev->keybit);
-
-    input_register_device(button_dev);
-
+    int ret;
+    ret = misc_register(&key_dev);
+    if(ret != 0)
+    {
+        printk("fail! ");
+    }
+    
     request_irq(gpio_to_irq(S5PV210_GPH2(0)),key_irq,IRQF_TRIGGER_FALLING,"key",0);//creat
     request_irq(gpio_to_irq(S5PV210_GPH3(3)),key_irq,IRQF_TRIGGER_FALLING,"key",1);//creat
 
@@ -78,13 +101,15 @@ static int my_key_init(void)
     key_timer.function = key_timer_func;
 
     add_timer(&key_timer);
+    init_waitqueue_head(&key_q);
+
 
     return 0;
 }
 
 static void my_key_exit(void)
 {
-    input_unregister_device(button_dev);
+    misc_deregister(&key_dev);
     free_irq(gpio_to_irq(S5PV210_GPH2(0)),0);
     free_irq(gpio_to_irq(S5PV210_GPH3(3)),1);
 }
