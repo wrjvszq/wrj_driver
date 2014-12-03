@@ -1,0 +1,1 @@
+cmd_/home/wrj/my_linux/kernel_module/drives/led/led.ko := arm-linux-ld -EL -r  -T /home/wrj/my_linux/kernel_module/linux-smart210/scripts/module-common.lds --build-id  -o /home/wrj/my_linux/kernel_module/drives/led/led.ko /home/wrj/my_linux/kernel_module/drives/led/led.o /home/wrj/my_linux/kernel_module/drives/led/led.mod.o

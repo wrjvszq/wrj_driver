@@ -1,0 +1,3 @@
+kernel//home/wrj/my_linux/kernel_module/drives/bus/my_bus.ko
+kernel//home/wrj/my_linux/kernel_module/drives/bus/my_driver.ko
+kernel//home/wrj/my_linux/kernel_module/drives/bus/my_device.ko

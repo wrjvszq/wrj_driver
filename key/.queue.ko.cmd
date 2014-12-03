@@ -1,0 +1,1 @@
+cmd_/home/wrj/my_linux/kernel_module/drives/key/queue.ko := arm-linux-ld -EL -r  -T /home/wrj/my_linux/kernel_module/linux-smart210/scripts/module-common.lds --build-id  -o /home/wrj/my_linux/kernel_module/drives/key/queue.ko /home/wrj/my_linux/kernel_module/drives/key/queue.o /home/wrj/my_linux/kernel_module/drives/key/queue.mod.o

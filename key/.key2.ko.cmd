@@ -1,0 +1,1 @@
+cmd_/home/wrj/my_linux/kernel_module/drives/key/key2.ko := arm-linux-ld -EL -r  -T /home/wrj/my_linux/kernel_module/linux-smart210/scripts/module-common.lds --build-id  -o /home/wrj/my_linux/kernel_module/drives/key/key2.ko /home/wrj/my_linux/kernel_module/drives/key/key2.o /home/wrj/my_linux/kernel_module/drives/key/key2.mod.o
