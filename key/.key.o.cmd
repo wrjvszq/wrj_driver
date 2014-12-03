@@ -533,6 +533,20 @@ deps_/home/wrj/my_linux/kernel_module/drives/key/key.o := \
   include/linux/aio.h \
   include/linux/aio_abi.h \
   include/linux/uio.h \
+  include/linux/input.h \
+  include/linux/device.h \
+    $(wildcard include/config/debug/devres.h) \
+    $(wildcard include/config/devtmpfs.h) \
+    $(wildcard include/config/sysfs/deprecated.h) \
+  include/linux/ioport.h \
+  include/linux/klist.h \
+  include/linux/pm.h \
+    $(wildcard include/config/pm.h) \
+    $(wildcard include/config/pm/runtime.h) \
+  /home/wrj/my_linux/kernel_module/linux-smart210/arch/arm/include/asm/device.h \
+    $(wildcard include/config/dmabounce.h) \
+  include/linux/pm_wakeup.h \
+  include/linux/mod_devicetable.h \
 
 /home/wrj/my_linux/kernel_module/drives/key/key.o: $(deps_/home/wrj/my_linux/kernel_module/drives/key/key.o)
 
